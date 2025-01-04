@@ -37,11 +37,55 @@ export class CoinbaseError extends Error {
 }
 
 function parseErrorResponse(responseText: string): Record<string, any> {
+  if (!responseText) {
+    return {
+      error: 'Empty response',
+      originalResponse: responseText
+    };
+  }
+
   try {
     return JSON.parse(responseText);
-  } catch {
-    return {};
+  } catch (error) {
+    // Create a more informative error object for debugging
+    return {
+      error: 'Invalid JSON response',
+      message: error instanceof Error ? error.message : 'Unknown parsing error',
+      originalResponse: responseText.slice(0, 200) // Include truncated response for debugging
+    };
   }
+}
+
+// Sanitize error messages to prevent sensitive information exposure
+function sanitizeErrorMessage(message: string): string {
+  if (typeof message !== 'string') return '';
+  
+  // Remove potential sensitive patterns (API keys, tokens, credentials)
+  return message
+    .replace(/([A-Za-z0-9+/]{32,})/g, '[REDACTED]')
+    .replace(/key-[a-zA-Z0-9]{32,}/g, '[REDACTED]')
+    .replace(/sk-[a-zA-Z0-9]{32,}/g, '[REDACTED]')
+    .replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g, '[REDACTED_EMAIL]');
+}
+
+function sanitizeErrorDetails(details: Record<string, any>): Record<string, any> {
+  if (!details || typeof details !== 'object') return {};
+
+  const sensitiveKeys = ['apiKey', 'secret', 'token', 'password', 'credential', 'key', 'auth'];
+  
+  return Object.entries(details).reduce((acc, [key, value]) => {
+    // Check if the key contains any sensitive patterns
+    if (sensitiveKeys.some(k => key.toLowerCase().includes(k))) {
+      acc[key] = '[REDACTED]';
+    } else if (typeof value === 'object' && value !== null) {
+      acc[key] = sanitizeErrorDetails(value);
+    } else if (typeof value === 'string') {
+      acc[key] = sanitizeErrorMessage(value);
+    } else {
+      acc[key] = value;
+    }
+    return acc;
+  }, {} as Record<string, any>);
 }
 
 function getErrorDetails(response: Response, responseText: string): CoinbaseErrorDetails {
@@ -77,8 +121,8 @@ function getErrorDetails(response: Response, responseText: string): CoinbaseErro
   if (status === 400) {
     return {
       type: CoinbaseErrorType.VALIDATION,
-      message: parsedError.message || 'Invalid request parameters',
-      details: parsedError,
+      message: sanitizeErrorMessage(parsedError.message || 'Invalid request parameters'),
+      details: sanitizeErrorDetails(parsedError),
       suggestion: 'Please verify all required parameters are provided and have valid values.'
     };
   }
@@ -104,9 +148,9 @@ function getErrorDetails(response: Response, responseText: string): CoinbaseErro
   // Default unknown error
   return {
     type: CoinbaseErrorType.UNKNOWN,
-    message: `Unexpected error: ${response.statusText}`,
-    details: parsedError,
-    suggestion: 'If this persists, please contact team with the error details.'
+    message: sanitizeErrorMessage(`Unexpected error: ${response.statusText}`),
+    details: sanitizeErrorDetails(parsedError),
+    suggestion: 'If this persists, please contact support with the error details.'
   };
 }
 
@@ -118,6 +162,11 @@ export function handleException(
   if ((400 <= response.status && response.status <= 499) ||
       (500 <= response.status && response.status <= 599)) {
     const errorDetails = getErrorDetails(response, responseText);
+    // Ensure all error information is sanitized
+    errorDetails.message = sanitizeErrorMessage(errorDetails.message);
+    if (errorDetails.details) {
+      errorDetails.details = sanitizeErrorDetails(errorDetails.details);
+    }
     throw new CoinbaseError(errorDetails, response.status, response);
   }
 }
