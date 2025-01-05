@@ -73,7 +73,7 @@ import net from "net";
 import path from "path";
 import { fileURLToPath } from "url";
 import yargs from "yargs";
-
+import { verifiableLogPlugin } from "@elizaos/plugin-tee-verifiable-log";
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
 
@@ -587,6 +587,9 @@ export async function createAgent(
             ...(teeMode !== TEEMode.OFF && walletSecretSalt
                 ? [teePlugin, solanaPlugin]
                 : []),
+            (teeMode !== TEEMode.OFF && walletSecretSalt &&getSecret(character,"VLOG")
+                ? verifiableLogPlugin
+                : null),
             getSecret(character, "COINBASE_API_KEY") &&
             getSecret(character, "COINBASE_PRIVATE_KEY") &&
             getSecret(character, "COINBASE_NOTIFICATION_URI")
