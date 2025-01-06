@@ -69,6 +69,7 @@ import { stargazePlugin } from "@elizaos/plugin-stargaze";
 import { zksyncEraPlugin } from "@elizaos/plugin-zksync-era";
 import { availPlugin } from "@elizaos/plugin-avail";
 import { openWeatherPlugin } from "@elizaos/plugin-open-weather";
+import { raggraphPlugin } from "@elizaos/plugin-raggraph";
 import Database from "better-sqlite3";
 import fs from "fs";
 import net from "net";
@@ -642,6 +643,11 @@ export async function createAgent(
             getSecret(character, "AVAIL_APP_ID") ? availPlugin : null,
             getSecret(character, "OPEN_WEATHER_API_KEY")
                 ? openWeatherPlugin
+                : null,
+            getSecret(character, "NEO4J_URI") &&
+            getSecret(character, "NEO4J_USER") &&
+            getSecret(character, "NEO4J_PASSWORD")
+                ? raggraphPlugin
                 : null,
         ].filter(Boolean),
         providers: [],
