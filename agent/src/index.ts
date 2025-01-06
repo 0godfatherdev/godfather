@@ -32,6 +32,7 @@ import {
 import { zgPlugin } from "@elizaos/plugin-0g";
 import { bootstrapPlugin } from "@elizaos/plugin-bootstrap";
 import createGoatPlugin from "@elizaos/plugin-goat";
+import { dominosPlugin } from "@elizaos/plugin-dominos";
 // import { intifacePlugin } from "@elizaos/plugin-intiface";
 import { DirectClient } from "@elizaos/client-direct";
 import { ThreeDGenerationPlugin } from "@elizaos/plugin-3d-generation";
@@ -40,8 +41,8 @@ import { aptosPlugin } from "@elizaos/plugin-aptos";
 import { avalanchePlugin } from "@elizaos/plugin-avalanche";
 import { binancePlugin } from "@elizaos/plugin-binance";
 import {
-    advancedTradePlugin,
     coinbaseCommercePlugin,
+    advancedTradePlugin,
     coinbaseMassPaymentsPlugin,
     tokenContractPlugin,
     tradePlugin,
@@ -553,6 +554,7 @@ export async function createAgent(
         // character.plugins are handled when clients are added
         plugins: [
             bootstrapPlugin,
+            dominosPlugin,
             getSecret(character, "CONFLUX_CORE_PRIVATE_KEY")
                 ? confluxPlugin
                 : null,

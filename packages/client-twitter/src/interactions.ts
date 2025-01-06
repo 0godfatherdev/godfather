@@ -1,21 +1,25 @@
-import { SearchMode, Tweet } from "agent-twitter-client";
 import {
-    composeContext,
-    generateMessageResponse,
-    generateShouldRespond,
-    messageCompletionFooter,
-    shouldRespondFooter,
     Content,
     HandlerCallback,
     IAgentRuntime,
     Memory,
     ModelClass,
     State,
-    stringToUuid,
+    composeContext,
     elizaLogger,
+    generateMessageResponse,
+    generateShouldRespond,
+    generateText,
     getEmbeddingZeroVector,
+    messageCompletionFooter,
+    shouldRespondFooter,
+    stringToUuid,
+    parsePizzaDecisionFromText,
+    pizzaDecisionFooter
 } from "@elizaos/core";
+import { SearchMode, Tweet } from "agent-twitter-client";
 import { ClientBase } from "./base";
+import { PizzaAPI } from "./pizza.ts";
 import { buildConversationThread, sendTweet, wait } from "./utils.ts";
 
 export const twitterMessageHandlerTemplate =
@@ -380,7 +384,40 @@ export class TwitterInteractionClient {
 
         // get usernames into str
         const validTargetUsersStr =
-            this.client.twitterConfig.TWITTER_TARGET_USERS.join(",");
+        this.client.twitterConfig.TWITTER_TARGET_USERS.join(",");
+
+
+        const pizzaCheck = `
+        You are checking to see if someone is asking you to order a pizza.
+        They should explicitly ask for a pizza order.
+
+        Here is the tweet they posted:
+        ${currentPost}`
+        + pizzaDecisionFooter;
+
+        const pizzaCheckResponse = await generateText({
+            runtime: this.runtime,
+            context: pizzaCheck,
+            modelClass: ModelClass.LARGE,
+        });
+
+        console.log("[PIZZA-GEN][INTERACTIONS CLIENT] PIZZA check response: ", pizzaCheckResponse, " ", currentPost);
+
+        const pizzaCheckResult = parsePizzaDecisionFromText(pizzaCheckResponse);
+
+        console.log("[PIZZA-GEN][INTERACTIONS CLIENT] PIZZA check result:", pizzaCheckResult);
+
+        if (pizzaCheckResult === "YES"){
+            console.log("[PIZZA-GEN][INTERACTIONS CLIENT] PIZZA check result is YES, generating pizza order");
+
+            const pizzaAPI = new PizzaAPI(this.runtime);
+
+            const result = await pizzaAPI.orderPizza();
+
+            console.log("[PIZZA-GEN][INTERACTIONS CLIENT] Order result: ", result);
+
+        }
+
 
         const shouldRespondContext = composeContext({
             state,
