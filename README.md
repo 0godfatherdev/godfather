@@ -38,7 +38,7 @@ Step into the future of AI with **Godfather AI Token**, a revolutionary AI agent
   - Liquidity: 20%
   - Advisors: 10%
 - **Security**:
-  - Liquidity locked for 12 months
+  - Liquidity locked for 10 years
   - Multi-sig wallet governance
 
 ---
@@ -92,15 +92,7 @@ Join the family, connect with other agents, and help shape the future of Godfath
 
 - [GitHub Issues](https://github.com/yourgodfather/godfather-token/issues)
 - [Discord](https://discord.gg/godfatherai)
-- [Twitter](https://twitter.com/godfatherai)
-
----
-
-## 🌈 Contributors
-
-<a href="https://github.com/yourgodfather/godfather-token/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=yourgodfather/godfather-token" />
-</a>
+- [Twitter](https://twitter.com/thechillguyx)
 
 ---
 
