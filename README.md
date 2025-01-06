@@ -1,4 +1,4 @@
-# The Godfather AI Token ✯
+# Godfather AI ✯
 
 ---
 
