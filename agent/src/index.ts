@@ -65,9 +65,11 @@ import { TEEMode, teePlugin } from "@elizaos/plugin-tee";
 import { teeMarlinPlugin } from "@elizaos/plugin-tee-marlin";
 import { tonPlugin } from "@elizaos/plugin-ton";
 import { webSearchPlugin } from "@elizaos/plugin-web-search";
+//import { echoChamberPlugin } from "@elizaos/plugin-echochambers";
 import { stargazePlugin } from "@elizaos/plugin-stargaze";
 import { zksyncEraPlugin } from "@elizaos/plugin-zksync-era";
 import { availPlugin } from "@elizaos/plugin-avail";
+import { twilioPlugin } from "@elizaos/plugin-twilio";
 import Database from "better-sqlite3";
 import fs from "fs";
 import net from "net";
@@ -550,6 +552,12 @@ export async function createAgent(
         // character.plugins are handled when clients are added
         plugins: [
             bootstrapPlugin,
+            getSecret(character, "TWILIO_ACCOUNT_SID") &&
+            getSecret(character, "TWILIO_AUTH_TOKEN") &&
+            getSecret(character, "TWILIO_PHONE_NUMBER") &&
+            getSecret(character, "TWILIO_WHATSAPP_PHONE_NUMBER")
+                ? twilioPlugin
+                : null,
             getSecret(character, "CONFLUX_CORE_PRIVATE_KEY")
                 ? confluxPlugin
                 : null,
