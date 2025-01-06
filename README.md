@@ -1,162 +1,123 @@
-# Eliza 🤖
+# The Godfather AI Token ✯
 
 <div align="center">
-  <img src="./docs/static/img/eliza_banner.jpg" alt="Eliza Banner" width="100%" />
+  <img src="./docs/static/img/godfather_banner.jpg" alt="Godfather Banner" width="100%" />
 </div>
 
 <div align="center">
 
-📖 [Documentation](https://elizaos.github.io/eliza/) | 🎯 [Examples](https://github.com/thejoven/awesome-eliza)
+📖 [Documentation](https://yourgodfather.org/docs) | 🎯 [Examples](https://yourgodfather.org/examples) | 💎 [Join the Family](https://discord.gg/godfatherai)
 
 </div>
 
-## 🌍 README Translations
+---
 
-[中文说明](./README_CN.md) | [日本語の説明](./README_JA.md) | [한국어 설명](./README_KOR.md) | [Français](./README_FR.md) | [Português](./README_PTBR.md) | [Türkçe](./README_TR.md) | [Русский](./README_RU.md) | [Español](./README_ES.md) | [Italiano](./README_IT.md) | [ไทย](./README_TH.md) | [Deutsch](./README_DE.md) | [Tiếng Việt](./README_VI.md) | [עִברִית](https://github.com/elizaos/Elisa/blob/main/README_HE.md) | [Tagalog](./README_TG.md) | [Polski](./README_PL.md) | [Arabic](./README_AR.md) | [Hungarian](./README_HU.md) | [Srpski](./README_RS.md)
+## 🌍 Overview
 
-## 🚩 Overview
+Step into the future of AI with **Godfather AI Token**, a revolutionary AI agent designed to entertain, advise, and dominate the blockchain underworld. From offering sage advice to wacking rival agents, Godfather AI is your ultimate mafia boss, pushing the boundaries of what AI can do—all while giving you a piece of the action through tokenomics that keep the family strong.
 
 <div align="center">
-  <img src="./docs/static/img/eliza_diagram.jpg" alt="Eliza Diagram" width="100%" />
+  <img src="./docs/static/img/godfather_diagram.jpg" alt="Godfather Diagram" width="100%" />
 </div>
+
+---
 
 ## ✨ Features
 
-- 🛠️ Full-featured Discord, Twitter and Telegram connectors
-- 🔗 Support for every model (Llama, Grok, OpenAI, Anthropic, etc.)
-- 👥 Multi-agent and room support
-- 📚 Easily ingest and interact with your documents
-- 💾 Retrievable memory and document store
-- 🚀 Highly extensible - create your own actions and clients
-- ☁️ Supports many models (local Llama, OpenAI, Anthropic, Groq, etc.)
-- 📦 Just works!
+- 🛠️ Seamless integration with Discord, Twitter, and Telegram
+- ⚖️ Dynamic governance powered by token holders
+- 🔎 AI-driven advice, storytelling, and strategic decisions
+- 🔓 Transparent, trustless smart contract architecture
+- 🚀 Highly extensible AI ecosystem
+- 💎 Participate in "family deals" and earn rewards
+- 🎮 Interactive AI rivalries and alliances
 
-## Video Tutorials
+---
 
-[AI Agent Dev School](https://www.youtube.com/watch?v=ArptLpQiKfI&list=PLx5pnFXdPTRzWla0RaOxALTSTnVq53fKL)
+## 🌐 Roadmap
 
-## 🎯 Use Cases
+1. **Phase 1**: Prototype launch (Godfather AI character and basic interactions)
+2. **Phase 2**: Token launch with staking rewards
+3. **Phase 3**: Community governance and mafia-themed "family decisions"
+4. **Phase 4**: Partnerships with other AI agents and expansion into NFT ecosystems
 
-- 🤖 Chatbots
-- 🕵️ Autonomous Agents
-- 📈 Business Process Handling
-- 🎮 Video Game NPCs
-- 🧠 Trading
+---
 
-## 💰 If you plan to launch a token
+## 🛎️ Tokenomics
 
-This framework is the number one open source project on github, we are enabling the next generation of human-machine interface but we still need your help to ensure the code is of the utmost quality with response rapid to critical issues that will affect our builder community at large.
+- **Total Supply**: 1,000,000,000 GFC
+- **Allocation**:
+  - Family (Community): 50%
+  - Operations & Development: 20%
+  - Liquidity: 20%
+  - Advisors: 10%
+- **Security**:
+  - Liquidity locked for 12 months
+  - Multi-sig wallet governance
 
-To ensure sustainable development and continued innovation, we ask contributions of 5-10% of initial token distributions from successful launches.
+---
 
-All contributions are publicly tracked on-chain and used exclusively for ecosystem development.
+## 🎥 Use Cases
 
-### ⚠️ Don't forget to tip the big guy 10%: ⚠️
-[AM84n1iLdxgVTAyENBcLdjXoyvjentTbu5Q6EpKV1PeG](https://solscan.io/account/AM84n1iLdxgVTAyENBcLdjXoyvjentTbu5Q6EpKV1PeG)
+- 🔬 Real-time AI interactions: Engage with the Godfather AI for advice, entertainment, or deals.
+- 🚪 Governance: Token holders vote on "family business" decisions.
+- 🎮 AI rivalries: Watch Godfather AI "wack" rival agents and form alliances.
+- 📊 Staking: Earn rewards by staking GFC and supporting the ecosystem.
+- 💎 NFT integration: Unlock exclusive content, AI-generated art, and more.
 
-## 🚀 Quick Start
+---
+
+## 💰 Launch Contributions
+
+To ensure sustainable development and innovation, we invite contributions of 5-10% of initial token distributions from successful launches.
+
+> **Tip the Big Guy**: Contributions go directly to ecosystem development and are publicly tracked on-chain. [View Wallet](https://solscan.io/account/AM84n1iLdxgVTAyENBcLdjXoyvjentTbu5Q6EpKV1PeG).
+
+---
+
+## ✨ Quick Start
 
 ### Prerequisites
 
-- [Python 2.7+](https://www.python.org/downloads/)
-- [Node.js 23+](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+- [Node.js 16+](https://nodejs.org/)
 - [pnpm](https://pnpm.io/installation)
+- [Git](https://git-scm.com/)
 
-> **Note for Windows Users:** [WSL 2](https://learn.microsoft.com/en-us/windows/wsl/install-manual) is required.
+> **Note for Windows Users:** [WSL 2](https://learn.microsoft.com/en-us/windows/wsl/) is recommended.
 
-### Use the Starter (Recommended)
-
-```bash
-git clone https://github.com/elizaos/eliza-starter.git
-cd eliza-starter
-cp .env.example .env
-pnpm i && pnpm build && pnpm start
-```
-
-Once the agent is running, you should see the message to run "pnpm start:client" at the end.
-Open another terminal and move to same directory and then run below command and follow the URL to chat to your agent.
-
-```bash
-pnpm start:client
-```
-
-Then read the [Documentation](https://elizaos.github.io/eliza/) to learn how to customize your Eliza.
-
-### Manually Start Eliza (Only recommended if you know what you are doing)
+### Steps
 
 ```bash
 # Clone the repository
-git clone https://github.com/elizaos/eliza.git
+git clone https://github.com/yourgodfather/godfather-token.git
+cd godfather-token
 
-# Checkout the latest release
-# This project iterates fast, so we recommend checking out the latest release
-git checkout $(git describe --tags --abbrev=0)
-```
-
-### Start Eliza with Gitpod
-
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/elizaos/eliza/tree/main)
-
-### Edit the .env file
-
-Copy .env.example to .env and fill in the appropriate values.
-
-```
-cp .env.example .env
-```
-
-Note: .env is optional. If you're planning to run multiple distinct agents, you can pass secrets through the character JSON
-Note: .env is optional. If you're planning to run multiple distinct agents, you can pass secrets through the character JSON
-
-### Automatically Start Eliza
-
-This will run everything to set up the project and start the bot with the default character.
-
-```bash
-sh scripts/start.sh
-```
-
-### Edit the character file
-
-1. Open `packages/core/src/defaultCharacter.ts` to modify the default character. Uncomment and edit.
-
-2. To load custom characters:
-    - Use `pnpm start --characters="path/to/your/character.json"`
-    - Multiple character files can be loaded simultaneously
-3. Connect with X (Twitter)
-    - change `"clients": []` to `"clients": ["twitter"]` in the character file to connect with X
-
-### Manually Start Eliza
-
-```bash
-pnpm i
+# Install dependencies and start the project
+pnpm install
 pnpm build
 pnpm start
-
-# The project iterates fast, sometimes you need to clean the project if you are coming back to the project
-pnpm clean
 ```
 
-#### Additional Requirements
+---
 
-You may need to install Sharp. If you see an error when starting up, try installing it with the following command:
+## 🔗 Community
 
-```
-pnpm install --include=optional sharp
-```
+Join the family, connect with other agents, and help shape the future of Godfather AI:
 
-### Community & contact
+- [GitHub Issues](https://github.com/yourgodfather/godfather-token/issues)
+- [Discord](https://discord.gg/godfatherai)
+- [Twitter](https://twitter.com/godfatherai)
 
-- [GitHub Issues](https://github.com/elizaos/eliza/issues). Best for: bugs you encounter using Eliza, and feature proposals.
-- [Discord](https://discord.gg/ai16z). Best for: sharing your applications and hanging out with the community.
-- [Developer Discord](https://discord.gg/3f67SH4rXT). Best for: getting help and plugin development.
+---
 
-## Contributors
+## 🌈 Contributors
 
-<a href="https://github.com/elizaos/eliza/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=elizaos/eliza" />
+<a href="https://github.com/yourgodfather/godfather-token/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=yourgodfather/godfather-token" />
 </a>
 
-## Star History
+---
 
-[![Star History Chart](https://api.star-history.com/svg?repos=elizaos/eliza&type=Date)](https://star-history.com/#elizaos/eliza&Date)
+## 🚀 Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=yourgodfather/godfather-token&type=Date)](https://star-history.com/#yourgodfather/godfather-token&Date)
