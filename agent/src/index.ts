@@ -9,6 +9,8 @@ import { SlackClientInterface } from "@elizaos/client-slack";
 import { TelegramClientInterface } from "@elizaos/client-telegram";
 import { TwitterClientInterface } from "@elizaos/client-twitter";
 // import { ReclaimAdapter } from "@elizaos/plugin-reclaim";
+import { NostrAgentClient } from "@elizaos/client-nostr";
+
 import {
     AgentRuntime,
     CacheManager,
@@ -425,6 +427,9 @@ export async function initializeClients(
     }
 
     if (clientTypes.includes(Clients.TWITTER)) {
+        TwitterClientInterface.enableSearch = !isFalsish(
+            getSecret(character, "TWITTER_SEARCH_ENABLE")
+        );
         const twitterClient = await TwitterClientInterface.start(runtime);
         if (twitterClient) {
             clients.twitter = twitterClient;
@@ -439,18 +444,24 @@ export async function initializeClients(
             clients.farcaster = farcasterClient;
         }
     }
-    if (clientTypes.includes("lens")) {
+    if (clientTypes.includes(Clients.LENS)) {
         const lensClient = new LensAgentClient(runtime);
         lensClient.start();
         clients.lens = lensClient;
     }
 
+    if (clientTypes.includes(Clients.NOSTR)) {
+        const nostrClient = new NostrAgentClient(runtime);
+        if (nostrClient) {
+            nostrClient.start();
+            clients.nostr = nostrClient;
+        }
+    }
+
     elizaLogger.log("client keys", Object.keys(clients));
 
     // TODO: Add Slack client to the list
-    // Initialize clients as an object
-
-    if (clientTypes.includes("slack")) {
+    if (clientTypes.includes(Clients.SLACK)) {
         const slackClient = await SlackClientInterface.start(runtime);
         if (slackClient) clients.slack = slackClient; // Use object property instead of push
     }
@@ -500,7 +511,7 @@ export async function createAgent(
     db: IDatabaseAdapter,
     cache: ICacheManager,
     token: string
-): Promise<AgentRuntime> {
+): AgentRuntime {
     elizaLogger.success(
         elizaLogger.successesTitle,
         "Creating runtime for character",
