@@ -1,3 +1,4 @@
+import type { Action } from "@elizaos/core";
 import {
     ActionExample,
     Content,
@@ -6,18 +7,32 @@ import {
     Memory,
     ModelClass,
     State,
-    type Action,
     elizaLogger,
     composeContext,
     generateObject,
 } from "@elizaos/core";
-import { validateAbstractConfig } from "../environment";
+import { validateCronosZkevmConfig } from "../enviroment";
 
-import { Address, createWalletClient, erc20Abi, http, parseEther } from "viem";
-import { abstractTestnet } from "viem/chains";
-import { privateKeyToAccount } from "viem/accounts";
-import { eip712WalletActions } from "viem/zksync";
+import {
+    Address,
+    createPublicClient,
+    erc20Abi,
+    http,
+    parseEther,
+    isAddress,
+    parseUnits,
+} from "viem";
+import { mainnet, cronoszkEVM } from "viem/chains";
 import { z } from "zod";
+import { ZKCRO_ADDRESS, ERC20_OVERRIDE_INFO } from "../constants";
+import { useGetAccount, useGetWalletClient } from "../hooks";
+import { normalize } from "viem/ens";
+import { ValidateContext } from "../utils";
+
+const ethereumClient = createPublicClient({
+    chain: mainnet,
+    transport: http(),
+});
 
 const TransferSchema = z.object({
     tokenAddress: z.string(),
@@ -31,39 +46,17 @@ export interface TransferContent extends Content {
     amount: string | number;
 }
 
-export function isTransferContent(
-    content: TransferContent
-): content is TransferContent {
-    // Validate types
-    const validTypes =
-        typeof content.tokenAddress === "string" &&
-        typeof content.recipient === "string" &&
-        (typeof content.amount === "string" ||
-            typeof content.amount === "number");
-    if (!validTypes) {
-        return false;
-    }
-
-    // Validate addresses
-    const validAddresses =
-        content.tokenAddress.startsWith("0x") &&
-        content.tokenAddress.length === 42 &&
-        content.recipient.startsWith("0x") &&
-        content.recipient.length === 42;
-
-    return validAddresses;
-}
-
 const transferTemplate = `Respond with a JSON markdown block containing only the extracted values. Use null for any values that cannot be determined.
 
 Here are several frequently used addresses. Use these for the corresponding tokens:
-- ETH/eth: 0x000000000000000000000000000000000000800A
-- USDC/usdc: 0xe4c7fbb0a626ed208021ccaba6be1566905e2dfc
+- ZKCRO/zkCRO: 0x000000000000000000000000000000000000800A
+- USDC/usdc: 0xaa5b845f8c9c047779bedf64829601d8b264076c
+- ETH/eth: 0x898b3560affd6d955b1574d87ee09e46669c60ea
 
 Example response:
 \`\`\`json
 {
-    "tokenAddress": "0x5A7d6b2F92C77FAD6CCaBd7EE0624E64907Eaf3E",
+    "tokenAddress": "0xaa5b845f8c9c047779bedf64829601d8b264076c",
     "recipient": "0xCCa8009f5e09F8C5dB63cb0031052F9CB635Af62",
     "amount": "1000"
 }
@@ -78,27 +71,20 @@ Given the recent messages, extract the following information about the requested
 
 Respond with a JSON markdown block containing only the extracted values.`;
 
-const ETH_ADDRESS = "0x000000000000000000000000000000000000800A";
-const ERC20_OVERRIDE_INFO = {
-    "0xe4c7fbb0a626ed208021ccaba6be1566905e2dfc": {
-        name: "USDC",
-        decimals: 6,
-    },
-};
-
-export default {
+export const TransferAction: Action = {
     name: "SEND_TOKEN",
     similes: [
-        "TRANSFER_TOKEN_ON_ABSTRACT",
-        "TRANSFER_TOKENS_ON_ABSTRACT",
-        "SEND_TOKENS_ON_ABSTRACT",
-        "SEND_ETH_ON_ABSTRACT",
-        "PAY_ON_ABSTRACT",
-        "MOVE_TOKENS_ON_ABSTRACT",
-        "MOVE_ETH_ON_ABSTRACT",
+        "TRANSFER_TOKEN_ON_CRONOSZKEVM",
+        "TRANSFER_TOKENS_ON_CRONOSZK",
+        "SEND_TOKENS_ON_CRONOSZKEVM",
+        "SEND_TOKENS_ON_CRONOSZK",
+        "SEND_ETH_ON_CRONOSZKEVM",
+        "SEND_ETH_ON_CRONOSZK",
+        "PAY_ON_CRONOSZKEVM",
+        "PAY_ON_CRONOSZK",
     ],
     validate: async (runtime: IAgentRuntime, message: Memory) => {
-        await validateAbstractConfig(runtime);
+        await validateCronosZkevmConfig(runtime);
         return true;
     },
     description: "Transfer tokens from the agent's wallet to another address",
@@ -109,7 +95,7 @@ export default {
         _options: { [key: string]: unknown },
         callback?: HandlerCallback
     ): Promise<boolean> => {
-        elizaLogger.log("Starting Abstract SEND_TOKEN handler...");
+        elizaLogger.log("Starting Cronos zkEVM SEND_TOKEN handler...");
 
         // Initialize or update state
         if (!state) {
@@ -134,8 +120,25 @@ export default {
             })
         ).object as unknown as TransferContent;
 
+        if (!isAddress(content.recipient, { strict: false })) {
+            elizaLogger.log("Resolving ENS name...");
+            try {
+                const name = normalize(content.recipient.trim());
+                const resolvedAddress = await ethereumClient.getEnsAddress({
+                    name,
+                });
+
+                if (isAddress(resolvedAddress, { strict: false })) {
+                    elizaLogger.log(`${name} resolved to ${resolvedAddress}`);
+                    content.recipient = resolvedAddress;
+                }
+            } catch (error) {
+                elizaLogger.error("Error resolving ENS name:", error);
+            }
+        }
+
         // Validate transfer content
-        if (!isTransferContent(content)) {
+        if (!ValidateContext.transferAction(content)) {
             console.error("Invalid content for TRANSFER_TOKEN action.");
             if (callback) {
                 callback({
@@ -147,29 +150,29 @@ export default {
         }
 
         try {
-            const PRIVATE_KEY = runtime.getSetting("ABSTRACT_PRIVATE_KEY")!;
-            const account = privateKeyToAccount(`0x${PRIVATE_KEY}`);
-
-            const walletClient = createWalletClient({
-                chain: abstractTestnet,
-                transport: http(),
-            }).extend(eip712WalletActions());
+            const account = useGetAccount(runtime);
+            const walletClient = useGetWalletClient();
 
             let hash;
+
+            // Check if the token is native
             if (
-                content.tokenAddress.toLowerCase() !== ETH_ADDRESS.toLowerCase()
+                content.tokenAddress.toLowerCase() !==
+                ZKCRO_ADDRESS.toLowerCase()
             ) {
                 // Convert amount to proper token decimals
                 const tokenInfo =
                     ERC20_OVERRIDE_INFO[content.tokenAddress.toLowerCase()];
                 const decimals = tokenInfo?.decimals ?? 18; // Default to 18 decimals if not specified
-                const tokenAmount =
-                    BigInt(content.amount) * BigInt(10 ** decimals);
+                const tokenAmount = parseUnits(
+                    content.amount.toString(),
+                    decimals
+                );
 
                 // Execute ERC20 transfer
                 hash = await walletClient.writeContract({
                     account,
-                    chain: abstractTestnet,
+                    chain: cronoszkEVM,
                     address: content.tokenAddress as Address,
                     abi: erc20Abi,
                     functionName: "transfer",
@@ -178,7 +181,7 @@ export default {
             } else {
                 hash = await walletClient.sendTransaction({
                     account: account,
-                    chain: abstractTestnet,
+                    chain: cronoszkEVM,
                     to: content.recipient as Address,
                     value: parseEther(content.amount.toString()),
                     kzg: undefined,
@@ -215,6 +218,48 @@ export default {
             {
                 user: "{{user1}}",
                 content: {
+                    text: "Send 0.01 ETH to 0x114B242D931B47D5cDcEe7AF065856f70ee278C4",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    text: "Sure, I'll send 0.01 ETH to that address now.",
+                    action: "SEND_TOKEN",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    text: "Successfully sent 0.01 ETH to 0x114B242D931B47D5cDcEe7AF065856f70ee278C4\nTransaction: 0xdde850f9257365fffffc11324726ebdcf5b90b01c6eec9b3e7ab3e81fde6f14b",
+                },
+            },
+        ],
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "Send 0.01 ETH to alim.getclave.eth",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    text: "Sure, I'll send 0.01 ETH to alim.getclave.eth now.",
+                    action: "SEND_TOKEN",
+                },
+            },
+            {
+                user: "{{agent}}",
+                content: {
+                    text: "Successfully sent 0.01 ETH to alim.getclave.eth\nTransaction: 0xdde850f9257365fffffc11324726ebdcf5b90b01c6eec9b3e7ab3e81fde6f14b",
+                },
+            },
+        ],
+        [
+            {
+                user: "{{user1}}",
+                content: {
                     text: "Send 100 USDC to 0xCCa8009f5e09F8C5dB63cb0031052F9CB635Af62",
                 },
             },
@@ -236,22 +281,22 @@ export default {
             {
                 user: "{{user1}}",
                 content: {
-                    text: "Please send 0.1 ETH to 0xbD8679cf79137042214fA4239b02F4022208EE82",
+                    text: "Please send 100 ZKCRO tokens to 0xbD8679cf79137042214fA4239b02F4022208EE82",
                 },
             },
             {
                 user: "{{agent}}",
                 content: {
-                    text: "Of course. Sending 0.1 ETH to that address now.",
+                    text: "Of course. Sending 100 ZKCRO to that address now.",
                     action: "SEND_TOKEN",
                 },
             },
             {
                 user: "{{agent}}",
                 content: {
-                    text: "Successfully sent 0.1 ETH to 0xbD8679cf79137042214fA4239b02F4022208EE82\nTransaction: 0x0b9f23e69ea91ba98926744472717960cc7018d35bc3165bdba6ae41670da0f0",
+                    text: "Successfully sent 100 ZKCRO to 0xbD8679cf79137042214fA4239b02F4022208EE82\nTransaction: 0x0b9f23e69ea91ba98926744472717960cc7018d35bc3165bdba6ae41670da0f0",
                 },
             },
         ],
     ] as ActionExample[][],
-} as Action;
+};
