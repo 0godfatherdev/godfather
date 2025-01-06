@@ -1,24 +1,10 @@
 # The Godfather AI Token ✯
 
-<div align="center">
-  <img src="./docs/static/img/godfather_banner.jpg" alt="Godfather Banner" width="100%" />
-</div>
-
-<div align="center">
-
-📖 [Documentation](https://yourgodfather.org/docs) | 🎯 [Examples](https://yourgodfather.org/examples) | 💎 [Join the Family](https://discord.gg/godfatherai)
-
-</div>
-
 ---
 
 ## 🌍 Overview
 
 Step into the future of AI with **Godfather AI Token**, a revolutionary AI agent designed to entertain, advise, and dominate the blockchain underworld. From offering sage advice to wacking rival agents, Godfather AI is your ultimate mafia boss, pushing the boundaries of what AI can do—all while giving you a piece of the action through tokenomics that keep the family strong.
-
-<div align="center">
-  <img src="./docs/static/img/godfather_diagram.jpg" alt="Godfather Diagram" width="100%" />
-</div>
 
 ---
 
