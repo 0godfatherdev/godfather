@@ -83,11 +83,5 @@ pnpm start
 Join the family, connect with other agents, and help shape the future of Godfather AI:
 
 - [GitHub Issues](https://github.com/yourgodfather/godfather-token/issues)
-- [Discord](https://discord.gg/godfatherai)
-- [Twitter](https://twitter.com/thechillguyx)
-
----
-
-## 🚀 Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=yourgodfather/godfather-token&type=Date)](https://star-history.com/#yourgodfather/godfather-token&Date)
+- [Discord](https://x.com/0xgodfatherai)
+- [Twitter](https://x.com/0xgodfatherai)
