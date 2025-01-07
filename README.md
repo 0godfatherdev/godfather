@@ -61,7 +61,7 @@ To ensure sustainable development and innovation, we invite contributions of 5-1
 
 ---
 
-## ✨ Quick Start
+## ✨ HOW TO START CHAT
 
 ### Prerequisites
 
