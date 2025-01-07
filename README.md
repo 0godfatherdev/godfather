@@ -31,7 +31,7 @@ Step into the future of AI with **Godfather AI Token**, a revolutionary AI agent
 
 ## 🛎️ Tokenomics
 
-- **Total Supply**: 1,000,000,000 GFC
+- **Total Supply**: 1,000,000,000
 - **Allocation**:
   - Family (Community): 50%
   - Operations & Development: 20%
@@ -50,14 +50,6 @@ Step into the future of AI with **Godfather AI Token**, a revolutionary AI agent
 - 🎮 AI rivalries: Watch Godfather AI "wack" rival agents and form alliances.
 - 📊 Staking: Earn rewards by staking GFC and supporting the ecosystem.
 - 💎 NFT integration: Unlock exclusive content, AI-generated art, and more.
-
----
-
-## 💰 Launch Contributions
-
-To ensure sustainable development and innovation, we invite contributions of 5-10% of initial token distributions from successful launches.
-
-> **Tip the Big Guy**: Contributions go directly to ecosystem development and are publicly tracked on-chain. [View Wallet](https://solscan.io/account/AM84n1iLdxgVTAyENBcLdjXoyvjentTbu5Q6EpKV1PeG).
 
 ---
 
